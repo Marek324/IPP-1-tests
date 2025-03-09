@@ -327,3 +327,48 @@ def test_circular_inheritance3():
         }
         """,
         35)
+
+def test_circular_inheritance4():
+    run_test("""
+            class A : A {}
+            class Main : Object {
+                run [|]
+            }    
+        """,
+        35)
+
+def test_circular_inheritance5():
+    run_test("""
+        class Main : Object {
+            run [| x := Main new. ]
+        }
+        """,
+        35)
+
+# while loop up dont get to first object
+def test_circular_inheritance6():
+    run_test("""
+        class A : B {}
+        class B : C {}
+        class C : B {}
+         class Main : Object {
+            run [|]
+        }
+        """,
+        35)
+
+#super should ot find b, because it call method on parent
+def test_super1():
+    run_test("""
+        class Main : Object {
+            run [|]
+        }
+        class A:Object{
+            a[|]
+        }
+        class F:A{
+            f[|x := super b.]
+            b[|]
+        }
+        """,
+        32)
